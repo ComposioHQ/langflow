@@ -60,7 +60,7 @@ class GmailAPIComponent(LCToolComponent):
             info="Current authentication status",
             dynamic=True,
             show=False,
-            real_time_refresh=True,
+            refresh_button=True,
         ),
         MultiselectInput(
             name="action_names",
