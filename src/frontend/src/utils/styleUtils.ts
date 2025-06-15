@@ -1,3 +1,4 @@
+import { RedditIcon } from "../icons/reddit";
 import { BotMessageSquareIcon } from "@/icons/BotMessageSquare";
 import { GradientSave } from "@/icons/GradientSparkles";
 import { fontAwesomeIcons, isFontAwesomeIcon } from "@/icons/fontAwesomeIcons";
@@ -229,6 +230,7 @@ export const SIDEBAR_CATEGORIES = [
 ];
 
 export const SIDEBAR_BUNDLES = [
+  { display_name: "Reddit", name: "reddit", icon: "Reddit" },
   { display_name: "Amazon", name: "amazon", icon: "Amazon" },
   { display_name: "Gmail", name: "gmail", icon: "Gmail" },
   { display_name: "GitHub", name: "github", icon: "Github" },
@@ -330,6 +332,7 @@ export const nodeIconToDisplayIconMap: Record<string, string> = {
   ChatInput: "MessagesSquare",
   ChatOutput: "MessagesSquare",
   //Integration Icons
+  Reddit: "Reddit",
   AIML: "AI/ML",
   AgentQL: "AgentQL",
   AirbyteJSONLoader: "Airbyte",

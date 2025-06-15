@@ -341,7 +341,7 @@ class ComposioYoutubeAPIComponent(ComposioBaseComponent):
                         return found
                 return result_data
             if result_data and isinstance(result_data, dict):
-                return result_data[next(iter(result_data))]
+                return [result_data[next(iter(result_data))]]
             return result_data  # noqa: TRY300
         except Exception as e:
             logger.error(f"Error executing action: {e}")
