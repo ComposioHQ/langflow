@@ -59,20 +59,20 @@ class TestGoogleMeetComponent(ComponentTestBaseWithoutClient):
         component = component_class(**default_kwargs)
         component.api_key = "test_key"
         component.action = [{"name": "Create Meet"}]
-        setattr(component, "GOOGLEMEET_CREATE_MEET-access_type", "OPEN")
-        setattr(component, "GOOGLEMEET_CREATE_MEET-entry_point_access", "ALL")
+        component.GOOGLEMEET_CREATE_MEET_access_type = "OPEN"
+        component.GOOGLEMEET_CREATE_MEET_entry_point_access = "ALL"
 
         # For this specific test, customize the _actions_data to not use get_result_field
         component._actions_data = {
             "GOOGLEMEET_CREATE_MEET": {
                 "display_name": "Create Meet",
-                "action_fields": ["GOOGLEMEET_CREATE_MEET-access_type", "GOOGLEMEET_CREATE_MEET-entry_point_access"],
+                "action_fields": ["GOOGLEMEET_CREATE_MEET_access_type", "GOOGLEMEET_CREATE_MEET_entry_point_access"],
             },
         }
 
         # Execute action
         result = component.execute_action()
-        assert result == "mocked response"
+        assert result == {"result": "mocked response"}
 
     def test_execute_action_get_meet(self, component_class, default_kwargs, monkeypatch):
         # Mock Action enum
@@ -82,13 +82,13 @@ class TestGoogleMeetComponent(ComponentTestBaseWithoutClient):
         component = component_class(**default_kwargs)
         component.api_key = "test_key"
         component.action = [{"name": "Get Meet Details"}]
-        setattr(component, "GOOGLEMEET_GET_MEET-space_name", "test space")
+        component.GOOGLEMEET_GET_MEET_space_name = "test space"
 
         # For this specific test, we need to customize the action_data to handle results field
         component._actions_data = {
             "GOOGLEMEET_GET_MEET": {
                 "display_name": "Get Meet Details",
-                "action_fields": ["GOOGLEMEET_GET_MEET-space_name"],
+                "action_fields": ["GOOGLEMEET_GET_MEET_space_name"],
             },
         }
 
@@ -100,7 +100,7 @@ class TestGoogleMeetComponent(ComponentTestBaseWithoutClient):
         with patch.object(component, "_build_wrapper", return_value=mock_toolset):
             result = component.execute_action()
             # Based on the component's actual behavior, it returns the entire data dict
-            assert result == "mocked response"
+            assert result == {"messages": "mocked response"}
 
     def test_execute_action_invalid_action(self, component_class, default_kwargs):
         # Setup component
@@ -120,7 +120,7 @@ class TestGoogleMeetComponent(ComponentTestBaseWithoutClient):
         component = component_class(**default_kwargs)
         component.api_key = "test_key"
         component.action = [{"name": "Get Meet"}]
-        setattr(component, "GOOGLEMEET_GET_MEET-space_name", "test space")
+        component.GOOGLEMEET_GET_MEET_space_name = "test space"
 
         # Create mock email data that would be returned by execute_action
         mock_meet_details = [

@@ -111,7 +111,7 @@ export const lazyIconsMapping = {
     import("@/icons/googlecalendar").then((mod) => ({
       default: mod.GooglecalendarIcon,
     })),
-  GoogleMeet: () =>
+  Googlemeet: () =>
     import("@/icons/googlemeet").then((mod) => ({
       default: mod.GooglemeetIcon,
     })),

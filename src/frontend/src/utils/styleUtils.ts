@@ -5,6 +5,7 @@ import { TwitterLogoIcon } from "@radix-ui/react-icons";
 import dynamicIconImports from "lucide-react/dynamicIconImports";
 import { lazy } from "react";
 import { FaApple, FaDiscord, FaGithub } from "react-icons/fa";
+import { GooglemeetIcon } from "../icons/googlemeet";
 
 const iconCache = new Map<string, any>();
 
@@ -371,6 +372,7 @@ export const nodeIconToDisplayIconMap: Record<string, string> = {
   GoogleSearchResults: "Google",
   GoogleSearchRun: "Google",
   GoogleSerperAPI: "Google",
+  Googlemeet: "Googlemeet",
   group_components: "GradientUngroup",
   HNLoader: "HackerNews",
   HuggingFaceEmbeddings: "HuggingFace",

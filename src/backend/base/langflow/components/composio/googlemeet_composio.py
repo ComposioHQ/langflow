@@ -1,3 +1,4 @@
+# flake8: noqa: TRY300
 from typing import Any
 
 from composio import Action
@@ -18,7 +19,6 @@ class ComposioGooglemeetAPIComponent(ComposioBaseComponent):
     documentation: str = "https://docs.composio.dev"
     app_name: str = "googlemeet"
 
-    # Google Meet specific actions
     _actions_data: dict = {
         "GOOGLEMEET_GET_TRANSCRIPTS_BY_CONFERENCE_RECORD_ID": {
             "display_name": "Get Transcripts By Conference Record ID",
@@ -40,10 +40,14 @@ class ComposioGooglemeetAPIComponent(ComposioBaseComponent):
         "GOOGLEMEET_CREATE_MEET": {
             "display_name": "Create Meet",
             "action_fields": ["GOOGLEMEET_CREATE_MEET_access_type", "GOOGLEMEET_CREATE_MEET_entry_point_access"],
+            "get_result_field": True,
+            "result_field": "response_data",
         },
         "GOOGLEMEET_GET_MEET": {
             "display_name": "Get Meet Details",
             "action_fields": ["GOOGLEMEET_GET_MEET_space_name"],
+            "get_result_field": True,
+            "result_field": "response_data",
         },
     }
 
@@ -146,22 +150,20 @@ class ComposioGooglemeetAPIComponent(ComposioBaseComponent):
                 params=params,
             )
             if not result.get("successful"):
-                return {"error": result.get("error", "No response")}
+                # Return the 'data' part of the response if unsuccessful
+                return result.get("data", {})
 
-            result_data = result.get("data", [])
-            if (
-                len(result_data) != 1
-                and not self._actions_data.get(action_key, {}).get("result_field")
-                and self._actions_data.get(action_key, {}).get("get_result_field")
-            ):
-                msg = f"Expected a dict with a single key, got {len(result_data)} keys: {result_data.keys()}"
-                raise ValueError(msg)
-            if result_data:
-                get_result_field = self._actions_data.get(action_key, {}).get("get_result_field", True)
-                if get_result_field:
-                    key = self._actions_data.get(action_key, {}).get("result_field", next(iter(result_data)))
-                    return result_data.get(key)
+            result_data = result.get("data", {})
+            action_data = self._actions_data.get(action_key, {})
+            get_result_field = action_data.get("get_result_field", False)
+            result_field = action_data.get("result_field")
+
+            if get_result_field:
+                if result_field is not None:
+                    return result_data.get(result_field)
+                # If get_result_field is True but no result_field is specified, return the whole data
                 return result_data
+            return result_data
         except Exception as e:
             logger.error(f"Error executing action: {e}")
             display_name = self.action[0]["name"] if isinstance(self.action, list) and self.action else str(self.action)
