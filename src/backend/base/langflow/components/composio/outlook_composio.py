@@ -3,12 +3,13 @@ from typing import Any
 
 from composio import Action
 
-from langflow.base.composio.composio_base import ComposioBaseComponent
 from langflow.inputs import BoolInput, FileInput, IntInput, MessageTextInput
 from langflow.logging import logger
 
+from .composio_dynamic import ComposioDynamicComponent
 
-class ComposioOutlookAPIComponent(ComposioBaseComponent):
+
+class ComposioOutlookAPIComponent(ComposioDynamicComponent):
     display_name: str = "Outlook"
     description: str = "Outlook API"
     icon = "Outlook"
@@ -164,7 +165,7 @@ class ComposioOutlookAPIComponent(ComposioBaseComponent):
     }
 
     inputs = [
-        *ComposioBaseComponent._base_inputs,
+        *ComposioDynamicComponent._base_inputs,
         MessageTextInput(
             name="OUTLOOK_OUTLOOK_LIST_EVENTS_user_id",
             display_name="User Id",
