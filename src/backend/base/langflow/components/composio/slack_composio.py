@@ -2,7 +2,6 @@ from typing import Any
 
 from composio import Action
 
-from langflow.base.composio.composio_base import ComposioBaseComponent
 from langflow.inputs import (
     BoolInput,
     IntInput,
@@ -10,8 +9,10 @@ from langflow.inputs import (
 )
 from langflow.logging import logger
 
+from .composio_dynamic import ComposioDynamicComponent
 
-class ComposioSlackAPIComponent(ComposioBaseComponent):
+
+class ComposioSlackAPIComponent(ComposioDynamicComponent):
     display_name: str = "Slack"
     description: str = "Slack API"
     icon = "Slack"
@@ -138,7 +139,7 @@ class ComposioSlackAPIComponent(ComposioBaseComponent):
     }
 
     inputs = [
-        *ComposioBaseComponent._base_inputs,
+        *ComposioDynamicComponent._base_inputs,
         IntInput(
             name="SLACK_LIST_ALL_SLACK_TEAM_USERS_WITH_PAGINATION_limit",
             display_name="Limit",

@@ -3,7 +3,6 @@ from typing import Any
 
 from composio import Action
 
-from langflow.base.composio.composio_base import ComposioBaseComponent
 from langflow.inputs.inputs import (
     BoolInput,
     FileInput,
@@ -12,8 +11,10 @@ from langflow.inputs.inputs import (
 )
 from langflow.logging import logger
 
+from .composio_dynamic import ComposioDynamicComponent
 
-class ComposioGmailAPIComponent(ComposioBaseComponent):
+
+class ComposioGmailAPIComponent(ComposioDynamicComponent):
     """Gmail API component for interacting with Gmail services."""
 
     display_name: str = "Gmail"
@@ -118,7 +119,7 @@ class ComposioGmailAPIComponent(ComposioBaseComponent):
 
     # Combine base inputs with Gmail-specific inputs
     inputs = [
-        *ComposioBaseComponent._base_inputs,
+        *ComposioDynamicComponent._base_inputs,
         # Email composition fields
         MessageTextInput(
             name="recipient_email",

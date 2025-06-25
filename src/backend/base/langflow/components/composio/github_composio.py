@@ -3,7 +3,6 @@ from typing import Any
 
 from composio import Action
 
-from langflow.base.composio.composio_base import ComposioBaseComponent
 from langflow.inputs import (
     BoolInput,
     IntInput,
@@ -11,8 +10,10 @@ from langflow.inputs import (
 )
 from langflow.logging import logger
 
+from .composio_dynamic import ComposioDynamicComponent
 
-class ComposioGitHubAPIComponent(ComposioBaseComponent):
+
+class ComposioGitHubAPIComponent(ComposioDynamicComponent):
     """GitHub API component for interacting with GitHub services."""
 
     display_name: str = "GitHub"
@@ -133,7 +134,7 @@ class ComposioGitHubAPIComponent(ComposioBaseComponent):
     }
 
     inputs = [
-        *ComposioBaseComponent._base_inputs,
+        *ComposioDynamicComponent._base_inputs,
         MessageTextInput(
             name="GITHUB_CREATE_AN_ISSUE_owner",
             display_name="Owner",

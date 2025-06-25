@@ -2,7 +2,6 @@ from typing import Any
 
 from composio import Action
 
-from langflow.base.composio.composio_base import ComposioBaseComponent
 from langflow.inputs import (
     BoolInput,
     IntInput,
@@ -10,8 +9,10 @@ from langflow.inputs import (
 )
 from langflow.logging import logger
 
+from .composio_dynamic import ComposioDynamicComponent
 
-class ComposioGoogleCalendarAPIComponent(ComposioBaseComponent):
+
+class ComposioGoogleCalendarAPIComponent(ComposioDynamicComponent):
     """Google Calendar API component for interacting with Google Calendar services."""
 
     display_name: str = "Google Calendar"
@@ -178,7 +179,7 @@ class ComposioGoogleCalendarAPIComponent(ComposioBaseComponent):
     }
 
     inputs = [
-        *ComposioBaseComponent._base_inputs,
+        *ComposioDynamicComponent._base_inputs,
         IntInput(
             name="GOOGLECALENDAR_LIST_CALENDARS_max_results",
             display_name="Max Results",
