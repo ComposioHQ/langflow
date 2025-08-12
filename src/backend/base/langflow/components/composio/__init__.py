@@ -8,6 +8,7 @@ from .discord_composio import ComposioDiscordAPIComponent
 from .figma_composio import ComposioFigmaAPIComponent
 from .github_composio import ComposioGitHubAPIComponent
 from .gmail_composio import ComposioGmailAPIComponent
+from .google_analytics_composio import ComposioGoogleAnalyticsAPIComponent
 from .googlecalendar_composio import ComposioGoogleCalendarAPIComponent
 from .googlemeet_composio import ComposioGooglemeetAPIComponent
 from .googletasks_composio import ComposioGoogleTasksAPIComponent
@@ -33,6 +34,7 @@ __all__ = [
     "ComposioFigmaAPIComponent",
     "ComposioGitHubAPIComponent",
     "ComposioGmailAPIComponent",
+    "ComposioGoogleAnalyticsAPIComponent",
     "ComposioGoogleCalendarAPIComponent",
     "ComposioGoogleTasksAPIComponent",
     "ComposioGooglemeetAPIComponent",

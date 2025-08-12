@@ -71,7 +71,7 @@ export const lazyIconsMapping = {
     import("@/icons/intercom").then((mod) => ({
       default: mod.IntercomIcon,
     })),
-  
+
   BotMessageSquareIcon: () =>
     import("@/icons/BotMessageSquare").then((mod) => ({
       default: mod.BotMessageSquareIcon,
@@ -163,7 +163,7 @@ export const lazyIconsMapping = {
     })),
   Googlesheets: () =>
     import("@/icons/googlesheets").then((mod) => ({
-      default: mod.GooglesheetsIcon,    
+      default: mod.GooglesheetsIcon,
     })),
   GoogleGenerativeAI: () =>
     import("@/icons/GoogleGenerativeAI").then((mod) => ({
@@ -246,8 +246,7 @@ export const lazyIconsMapping = {
   Mcp: () => import("@/icons/MCP").then((mod) => ({ default: mod.McpIcon })),
   Mem0: () => import("@/icons/Mem0").then((mod) => ({ default: mod.Mem0 })),
   Meta: () => import("@/icons/Meta").then((mod) => ({ default: mod.MetaIcon })),
-  Miro: () =>
-    import("@/icons/miro").then((mod) => ({ default: mod.MiroIcon })),
+  Miro: () => import("@/icons/miro").then((mod) => ({ default: mod.MiroIcon })),
   Midjourney: () =>
     import("@/icons/Midjorney").then((mod) => ({
       default: mod.MidjourneyIcon,
