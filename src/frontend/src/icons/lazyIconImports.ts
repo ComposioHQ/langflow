@@ -165,6 +165,18 @@ export const lazyIconsMapping = {
     import("@/icons/googlesheets").then((mod) => ({
       default: mod.GooglesheetsIcon,
     })),
+  Googlemeet: () =>
+    import("@/icons/googlemeet").then((mod) => ({
+      default: mod.GooglemeetIcon,
+    })),
+  GoogleTasks: () =>
+    import("@/icons/GoogleTasks").then((mod) => ({
+      default: mod.GoogleTasksIcon,
+    })),
+  Googlesheets: () =>
+    import("@/icons/googlesheets").then((mod) => ({
+      default: mod.GooglesheetsIcon,
+    })),
   GoogleGenerativeAI: () =>
     import("@/icons/GoogleGenerativeAI").then((mod) => ({
       default: mod.GoogleGenerativeAIIcon,
@@ -231,8 +243,11 @@ export const lazyIconsMapping = {
     import("@/icons/JigsawStack").then((mod) => ({
       default: mod.JigsawStackIcon,
     })),
+<<<<<<< HEAD
   Klaviyo: () =>
     import("@/icons/klaviyo").then((mod) => ({ default: mod.KlaviyoIcon })),
+=======
+>>>>>>> origin/feat/composio-v3-2
   Linear: () =>
     import("@/icons/linear").then((mod) => ({ default: mod.LinearIcon })),
   LangChain: () =>
