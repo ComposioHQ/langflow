@@ -55,10 +55,6 @@ export const lazyIconsMapping = {
     import("@/icons/googledocs").then((mod) => ({
       default: mod.GoogledocsIcon,
     })),
-  GoogleDrive: () =>
-    import("@/icons/google_drive").then((mod) => ({
-      default: mod.Google_DriveIcon,
-    })),
   Calendly: () =>
     import("@/icons/calendly").then((mod) => ({
       default: mod.CalendlyIcon,
@@ -153,30 +149,6 @@ export const lazyIconsMapping = {
     import("@/icons/google_analytics").then((mod) => ({
       default: mod.Google_AnalyticsIcon,
     })),
-  Googlemeet: () =>
-    import("@/icons/googlemeet").then((mod) => ({
-      default: mod.GooglemeetIcon,
-    })),
-  GoogleTasks: () =>
-    import("@/icons/GoogleTasks").then((mod) => ({
-      default: mod.GoogleTasksIcon,
-    })),
-  Googlesheets: () =>
-    import("@/icons/googlesheets").then((mod) => ({
-      default: mod.GooglesheetsIcon,
-    })),
-  Googlemeet: () =>
-    import("@/icons/googlemeet").then((mod) => ({
-      default: mod.GooglemeetIcon,
-    })),
-  GoogleTasks: () =>
-    import("@/icons/GoogleTasks").then((mod) => ({
-      default: mod.GoogleTasksIcon,
-    })),
-  Googlesheets: () =>
-    import("@/icons/googlesheets").then((mod) => ({
-      default: mod.GooglesheetsIcon,
-    })),
   GoogleGenerativeAI: () =>
     import("@/icons/GoogleGenerativeAI").then((mod) => ({
       default: mod.GoogleGenerativeAIIcon,
@@ -189,21 +161,17 @@ export const lazyIconsMapping = {
     import("@/icons/googlecalendar").then((mod) => ({
       default: mod.GooglecalendarIcon,
     })),
+  Googlemaps: () =>
+    import("@/icons/googlemaps").then((mod) => ({ default: mod.GooglemapsIcon })),
+  Googlemeet: () =>
+    import("@/icons/googlemeet").then((mod) => ({ default: mod.GooglemeetIcon })),
+  Googlesheets: () =>
+    import("@/icons/googlesheets").then((mod) => ({ default: mod.GooglesheetsIcon })),
+  GoogleTasks: () =>
+    import("@/icons/GoogleTasks").then((mod) => ({ default: mod.GoogleTasksIcon })),
   GradientInfinity: () =>
     import("@/icons/GradientSparkles").then((mod) => ({
       default: mod.GradientInfinity,
-    })),
-  Googlemaps: () =>
-    import("@/icons/googlemaps").then((mod) => ({
-      default: mod.GooglemapsIcon,
-    })),
-  Todoist: () =>
-    import("@/icons/todoist").then((mod) => ({
-      default: mod.TodoistIcon,
-    })),
-  Zoom: () =>
-    import("@/icons/zoom").then((mod) => ({
-      default: mod.ZoomIcon,
     })),
   GradientUngroup: () =>
     import("@/icons/GradientSparkles").then((mod) => ({
@@ -243,13 +211,8 @@ export const lazyIconsMapping = {
     import("@/icons/JigsawStack").then((mod) => ({
       default: mod.JigsawStackIcon,
     })),
-<<<<<<< HEAD
   Klaviyo: () =>
     import("@/icons/klaviyo").then((mod) => ({ default: mod.KlaviyoIcon })),
-=======
->>>>>>> origin/feat/composio-v3-2
-  Linear: () =>
-    import("@/icons/linear").then((mod) => ({ default: mod.LinearIcon })),
   LangChain: () =>
     import("@/icons/LangChain").then((mod) => ({ default: mod.LangChainIcon })),
   Langwatch: () =>
@@ -316,8 +279,6 @@ export const lazyIconsMapping = {
     })),
   Redis: () =>
     import("@/icons/Redis").then((mod) => ({ default: mod.RedisIcon })),
-  Reddit: () =>
-    import("@/icons/reddit").then((mod) => ({ default: mod.RedditIcon })),
   SambaNova: () =>
     import("@/icons/SambaNova").then((mod) => ({ default: mod.SambaNovaIcon })),
   ScrapeGraph: () =>
@@ -368,6 +329,8 @@ export const lazyIconsMapping = {
     import("@/icons/thumbs").then((mod) => ({
       default: mod.ThumbUpIconCustom,
     })),
+  Todoist: () =>
+    import("@/icons/todoist").then((mod) => ({ default: mod.TodoistIcon })),
   TwelveLabs: () =>
     import("@/icons/TwelveLabs").then((mod) => ({
       default: mod.TwelveLabsIcon,
@@ -403,4 +366,10 @@ export const lazyIconsMapping = {
     import("@/icons/Youtube").then((mod) => ({ default: mod.YouTubeSvgIcon })),
   ZepMemory: () =>
     import("@/icons/ZepMemory").then((mod) => ({ default: mod.ZepMemoryIcon })),
+  Zoom: () =>
+    import("@/icons/zoom").then((mod) => ({ default: mod.ZoomIcon })),
+  Reddit: () =>
+    import("@/icons/reddit").then((mod) => ({ default: mod.RedditIcon })),
+  Linear: () =>
+    import("@/icons/linear").then((mod) => ({ default: mod.LinearIcon })),
 };
