@@ -1212,29 +1212,17 @@ class ComposioBaseComponent(Component):
 
         # Handle disconnect operations when tool mode is enabled
         if field_name == "auth_link" and field_value == "disconnect":
-            try:
-                # Get the specific connection ID that's currently being used
-                stored_connection_id = build_config.get("auth_link", {}).get("connection_id")
-                if stored_connection_id:
-                    self._disconnect_specific_connection(stored_connection_id)
-                else:
-                    # No connection ID stored - nothing to disconnect
-                    logger.warning("No connection ID found to disconnect")
-                    build_config["auth_link"]["value"] = "connect"
-                    build_config["auth_link"]["auth_tooltip"] = "Connect"
-                    return build_config
-            except (ValueError, ConnectionError) as e:
-                logger.error(f"Error disconnecting: {e}")
-                build_config["auth_link"]["value"] = "error"
-                build_config["auth_link"]["auth_tooltip"] = f"Disconnect failed: {e!s}"
-                return build_config
-            else:
-                build_config["auth_link"]["value"] = "connect"
-                build_config["auth_link"]["auth_tooltip"] = "Connect"
-                build_config["auth_link"].pop("connection_id", None)  # Clear stored connection ID
-                build_config["action_button"]["helper_text"] = "Please connect before selecting actions."
-                build_config["action_button"]["helper_text_metadata"] = {"variant": "destructive"}
-                return build_config
+            # Soft disconnect: do not delete remote account; only clear local state
+            stored_connection_id = build_config.get("auth_link", {}).get("connection_id")
+            if not stored_connection_id:
+                logger.warning("No connection ID found to disconnect (soft)")
+            build_config.setdefault("auth_link", {})
+            build_config["auth_link"]["value"] = "connect"
+            build_config["auth_link"]["auth_tooltip"] = "Connect"
+            build_config["auth_link"].pop("connection_id", None)
+            build_config["action_button"]["helper_text"] = "Please connect before selecting actions."
+            build_config["action_button"]["helper_text_metadata"] = {"variant": "destructive"}
+            return build_config
 
         # Handle auth mode change -> render appropriate fields based on schema
         if field_name == "auth_mode":
