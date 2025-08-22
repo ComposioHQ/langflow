@@ -30,39 +30,6 @@ from langflow.schema.dataframe import DataFrame
 from langflow.schema.message import Message
 
 
-def _patch_graph_clean_null_input_types() -> None:
-    """Monkey-patch Graph._create_vertex to clean legacy templates."""
-    try:
-        from langflow.graph.graph.base import Graph
-
-        original_create_vertex = Graph._create_vertex
-
-        def _create_vertex_with_cleanup(self, frontend_data):
-            try:
-                node_id: str | None = frontend_data.get("id") if isinstance(frontend_data, dict) else None
-                if node_id and "Composio" in node_id:
-                    template = frontend_data.get("data", {}).get("node", {}).get("template", {})
-                    if isinstance(template, dict):
-                        for field_cfg in template.values():
-                            if isinstance(field_cfg, dict) and field_cfg.get("input_types") is None:
-                                field_cfg["input_types"] = []
-            except (AttributeError, TypeError, KeyError) as e:
-                logger.debug(f"Composio template cleanup encountered error: {e}")
-
-            return original_create_vertex(self, frontend_data)
-
-        # Patch only once
-        if getattr(Graph, "_composio_patch_applied", False) is False:
-            Graph._create_vertex = _create_vertex_with_cleanup  # type: ignore[method-assign]
-            Graph._composio_patch_applied = True  # type: ignore[attr-defined]
-            logger.debug("Applied Composio template cleanup patch to Graph._create_vertex")
-
-    except (AttributeError, TypeError) as e:
-        logger.debug(f"Failed to apply Composio Graph patch: {e}")
-
-
-# Apply the patch at import time
-_patch_graph_clean_null_input_types()
 
 
 class ComposioBaseComponent(Component):
@@ -789,9 +756,7 @@ class ComposioBaseComponent(Component):
             if inp.name is not None:
                 inp_dict = inp.to_dict() if hasattr(inp, "to_dict") else inp.__dict__.copy()
 
-                # Ensure input_types is always a list
-                if not isinstance(inp_dict.get("input_types"), list):
-                    inp_dict["input_types"] = []
+                # Do not mutate input_types here; keep original configuration
 
                 inp_dict.setdefault("show", True)  # visible once action selected
                 # Preserve previously entered value if user already filled something
@@ -982,7 +947,18 @@ class ComposioBaseComponent(Component):
         try:
             build_config.setdefault("auth_mode", {})
             auth_mode_cfg = build_config["auth_mode"]
-            # If toolkit has composio-managed OAuth, force single OAUTH2 mode regardless of other schema options
+            # If there's an active/stored connection, prefer showing its scheme as the selected single mode
+            connected_mode = None
+            try:
+                connection_id = (build_config.get("auth_link") or {}).get("connection_id")
+                if connection_id:
+                    connected_mode = self._get_connection_auth_scheme_by_id(connection_id)
+            except Exception:
+                connected_mode = None
+            if connected_mode:
+                self._apply_connected_auth_mode_display(build_config, connected_mode)
+                return
+            # Otherwise, if toolkit has composio-managed OAuth, default to single OAUTH2 mode
             schema = self._get_toolkit_schema() or {}
             managed = schema.get("composio_managed_auth_schemes") or schema.get("composioManagedAuthSchemes") or []
             if isinstance(managed, list) and "OAUTH2" in managed:
@@ -1115,12 +1091,61 @@ class ComposioBaseComponent(Component):
         # Also clear any tracked dynamic fields
         self._clear_auth_dynamic_fields(build_config)
 
+    def _get_connection_auth_scheme_by_id(self, connection_id: str) -> str | None:
+        """Retrieve the auth scheme (e.g., OAUTH2, API_KEY) for a given connection id."""
+        try:
+            composio = self._build_wrapper()
+            connection = composio.connected_accounts.get(nanoid=connection_id)
+            # Try direct attributes first
+            auth_config = getattr(connection, "auth_config", None)
+            scheme = getattr(auth_config, "auth_scheme", None)
+            if not isinstance(scheme, str):
+                state = getattr(connection, "state", None)
+                candidate = getattr(state, "auth_scheme", None) if state is not None else None
+                scheme = candidate if isinstance(candidate, str) else None
+            # Fallback to dict introspection
+            if not isinstance(scheme, str):
+                conn_dict = self._to_plain_dict(connection)
+                if isinstance(conn_dict, dict):
+                    scheme = conn_dict.get("auth_config", {}).get("auth_scheme") or conn_dict.get("state", {}).get("auth_scheme")
+            return scheme if isinstance(scheme, str) else None
+        except Exception as e:
+            logger.debug(f"Could not fetch auth scheme for connection {connection_id}: {e}")
+            return None
+
+    def _apply_connected_auth_mode_display(self, build_config: dict, mode: str | None) -> None:
+        """Set the auth mode UI to a single-mode pill for the connected account's scheme."""
+        if not mode:
+            return
+        selected = str(mode)
+        build_config.setdefault("auth_mode", {})
+        auth_mode_cfg = build_config["auth_mode"]
+        auth_mode_cfg["options"] = [selected]
+        auth_mode_cfg["value"] = selected
+        auth_mode_cfg["show"] = False
+        # Render/update pill
+        try:
+            pill = TabInput(
+                name="auth_mode_pill",
+                display_name="Auth Mode",
+                options=[selected],
+                value=selected,
+            ).to_dict()
+            pill["show"] = True
+            build_config["auth_mode_pill"] = pill
+        except Exception:
+            build_config["auth_mode_pill"] = {
+                "name": "auth_mode_pill",
+                "display_name": "Auth Mode",
+                "type": "tab",
+                "options": [selected],
+                "value": selected,
+                "show": True,
+            }
+
     def update_build_config(self, build_config: dict, field_value: Any, field_name: str | None = None) -> dict:
         """Update build config for auth and action selection."""
-        # Clean any legacy None values that may still be present
-        for _fconfig in build_config.values():
-            if isinstance(_fconfig, dict) and _fconfig.get("input_types") is None:
-                _fconfig["input_types"] = []
+        # Avoid normalizing legacy input_types here; rely on upstream fixes
 
         # BULLETPROOF tool_mode checking - check all possible places where tool_mode could be stored
         instance_tool_mode = getattr(self, "tool_mode", False) if hasattr(self, "tool_mode") else False
@@ -1250,6 +1275,12 @@ class ComposioBaseComponent(Component):
                 build_config["auth_link"]["value"] = "validated"
                 build_config["auth_link"]["auth_tooltip"] = "Disconnect"
                 build_config["auth_link"]["connection_id"] = connection_id
+                # Reflect connected mode in UI
+                try:
+                    connected_mode = self._get_connection_auth_scheme_by_id(connection_id)
+                    self._apply_connected_auth_mode_display(build_config, connected_mode)
+                except Exception:
+                    pass
                 build_config["action_button"]["helper_text"] = ""
                 build_config["action_button"]["helper_text_metadata"] = {}
                 return build_config
@@ -1282,6 +1313,12 @@ class ComposioBaseComponent(Component):
                     build_config["auth_link"]["value"] = "validated"
                     build_config["auth_link"]["auth_tooltip"] = "Disconnect"
                     build_config["auth_link"]["connection_id"] = connection_id
+                    # Reflect connected mode in UI
+                    try:
+                        connected_mode = self._get_connection_auth_scheme_by_id(connection_id)
+                        self._apply_connected_auth_mode_display(build_config, connected_mode)
+                    except Exception:
+                        pass
                     build_config["action_button"]["helper_text"] = ""
                     build_config["action_button"]["helper_text_metadata"] = {}
                     logger.info(f"Using existing ACTIVE connection {connection_id} for {toolkit_slug}")
@@ -1529,6 +1566,12 @@ class ComposioBaseComponent(Component):
                 build_config["auth_link"]["value"] = "validated"
                 build_config["auth_link"]["auth_tooltip"] = "Disconnect"
                 build_config["auth_link"]["show"] = False
+                # Reflect connected mode in UI
+                try:
+                    connected_mode = self._get_connection_auth_scheme_by_id(active_connection_id)
+                    self._apply_connected_auth_mode_display(build_config, connected_mode)
+                except Exception:
+                    pass
                 # Clear any auth fields since we are already connected
                 schema = self._get_toolkit_schema()
                 self._clear_auth_fields_from_schema(build_config, schema)
@@ -1738,6 +1781,12 @@ class ComposioBaseComponent(Component):
         if active_connection_id:
             build_config["auth_link"]["value"] = "validated"
             build_config["auth_link"]["auth_tooltip"] = "Disconnect"
+            # Reflect connected mode in UI
+            try:
+                connected_mode = self._get_connection_auth_scheme_by_id(active_connection_id)
+                self._apply_connected_auth_mode_display(build_config, connected_mode)
+            except Exception:
+                pass
             build_config["action_button"]["helper_text"] = ""
             build_config["action_button"]["helper_text_metadata"] = {}
         elif stored_connection_id:
