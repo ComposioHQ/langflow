@@ -11278,7 +11278,7 @@
             "default": false
           },
           "properties": {
-            "$ref": "#/components/schemas/lfx__schema__properties__Properties"
+            "$ref": "#/components/schemas/langflow__schema__properties__Properties"
           },
           "category": {
             "type": "string",
@@ -11408,7 +11408,7 @@
           "properties": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/lfx__schema__properties__Properties"
+                "$ref": "#/components/schemas/langflow__schema__properties__Properties"
               },
               {
                 "type": "null"
@@ -11547,7 +11547,7 @@
           "properties": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/lfx__schema__properties__Properties"
+                "$ref": "#/components/schemas/langflow__schema__properties__Properties"
               },
               {
                 "type": "null"
@@ -11943,7 +11943,7 @@
           "properties": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/lfx__schema__properties__Properties"
+                "$ref": "#/components/schemas/langflow__schema__properties__Properties"
               },
               {
                 "type": "null"
@@ -13631,53 +13631,7 @@
         "additionalProperties": true,
         "type": "object"
       },
-      "langflow__schema__properties__Source": {
-        "properties": {
-          "id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Id",
-            "description": "The id of the source component."
-          },
-          "display_name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Display Name",
-            "description": "The display name of the source component."
-          },
-          "source": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Source",
-            "description": "The source of the message. Normally used to display the model name (e.g. 'gpt-4o')"
-          }
-        },
-        "type": "object",
-        "title": "Source"
-      },
-      "lfx__schema__content_types__JSONContent": {
-        "additionalProperties": true,
-        "type": "object"
-      },
-      "lfx__schema__properties__Properties": {
+      "langflow__schema__properties__Properties": {
         "properties": {
           "text_color": {
             "anyOf": [
@@ -13707,7 +13661,7 @@
             "default": false
           },
           "source": {
-            "$ref": "#/components/schemas/langflow__schema__properties__Source"
+            "$ref": "#/components/schemas/lfx__schema__properties__Source"
           },
           "icon": {
             "anyOf": [
@@ -13754,6 +13708,52 @@
         },
         "type": "object",
         "title": "Properties"
+      },
+      "lfx__schema__content_types__JSONContent": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "lfx__schema__properties__Source": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id",
+            "description": "The id of the source component."
+          },
+          "display_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Name",
+            "description": "The display name of the source component."
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source",
+            "description": "The source of the message. Normally used to display the model name (e.g. 'gpt-4o')"
+          }
+        },
+        "type": "object",
+        "title": "Source"
       },
       "lfx__utils__schemas__File": {
         "properties": {
