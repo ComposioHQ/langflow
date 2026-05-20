@@ -8,7 +8,8 @@
   "overrides": {
     "tar": "^7.5.7",
     "glob": "^11.1.0",
-    "test-exclude": "^7.0.0"
+    "test-exclude": "^7.0.0",
+    "handlebars": ">=4.7.9"
   },
   "dependencies": {
     "@chakra-ui/number-input": "^2.1.2",
